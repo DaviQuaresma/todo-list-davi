@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  mysql-todo:
+    image: mysql:8.0
+    container_name: mysql-todo
+    environment:
+      MYSQL_DATABASE: todo_db
+      MYSQL_USER: davi
+      MYSQL_PASSWORD: davi
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./todo-api
+      dockerfile: Dockerfile
+    container_name: todo-api
+    depends_on:
+      mysql-todo:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./todo-api:/var/www
+    working_dir: /var/www
+    ports:
+      - "8000:8000"
+    command: sh -c "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000"
+
+  frontend:
+    build:
+      context: ./todo-front
+      dockerfile: Dockerfile
+    container_name: todo-front
+    restart: unless-stopped
+    volumes:
+      - ./todo-front:/usr/share/nginx/html:ro
+    ports:
+      - "8080:80"
+volumes:
+  mysql_data:

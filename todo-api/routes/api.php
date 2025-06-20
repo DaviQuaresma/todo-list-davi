@@ -30,6 +30,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
 });
 
+
 Route::middleware(['auth:api'])->group(function () {
     Route::get('/todolists/{id}/tasks', [TaskController::class, 'index']);
+});
+
+
+Route::get('/teste-cors', function () {
+    return response()->json(['ok' => true]);
 });

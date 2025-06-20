@@ -29,7 +29,7 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token,
             'expires_in' => auth('api')->factory()->getTTL() * 60
-        ]);
+        ], 201);
     }
 
 
