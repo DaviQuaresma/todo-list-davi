@@ -1,35 +1,123 @@
-# To do List
+# 📝 ToDo List - Projeto Fullstack com Laravel, MySQL, NGINX e HTML/Bootstrap
 
-O objetivo é ter uma _single page application_ onde o usuário pode:
+Aplicação de lista de tarefas (ToDo List) com backend em **Laravel + JWT**, banco de dados **MySQL**, e frontend simples sem framwork para otimizar o tempo feito com **HTML, Bootstrap e jQuery**. O projeto roda totalmente via **Docker Compose**.
 
-- Listar e criar suas to-do lists
-- Selecionar uma lista para ver/editar suas tarefas
-- Adicionar/remover tarefas a esta lista
-- Marcar uma tarefa com completa (ou não)
+---
 
-Apenas como referência, segue um screen shot com uma sugestão de design:
-![to-do list](sample.jpg)
+## 📦 Estrutura do Projeto
 
-Não é necessário seguir este design/comportamento. Fique a vontade para (re)definir o design/comportamento que preferir. Por exemplo, se preferir usar checkboxes ao invés de botões que mudam de estado para indicar que uma tarefa foi concluída, tudo bem. Se quiser adicionar algo como um botão para limpar todas as tarefas concluídas, também.
+```bash
+todo-list-davi/
+├── todo-api/        # Backend Laravel (API JWT)
+├── todo-front/      # Frontend HTML/CSS/JS
+├── docker-compose.yml
+└── README.md
+```
 
-Como o foco do teste é o back-end é obrigatório o uso de banco de dados como mysql e etc, não esqueça de enviar junto um arquivo sql com a estrutura do banco.
+---
 
-## Requisitos
-- Versionamento de Código com GIT 
-- O uso no back-end de framework codeigniter ou laravel
-- O back-end terá que ser no formato Rest Api com autenticação em JWT com uma expiração do token em 2 horas
+## 🚀 Como Rodar o Projeto com Docker
 
-## Será avaliado
+> Pré-requisitos:
+> - Docker instalado e funcionando
+> - Docker Compose
 
-- Obviamente, o funcionamento da aplicação.
-- O uso correto do git. Por isso, registre seus passos com commits que façam sentido e com mensagens claras e objetivas. Crie branches quando achar que faz sentido.
-- A qualidade do código. Do nome que é dado para os elementos (classes, arquivos, recursos, ...) à separação de responsabilidades. Faça de conta que isso faz parte de um projeto que vai crescer, mas tome cuidado com a "over-engineering".
-- Como você completa as lacunas desta especificação. Muita coisa não foi dita.
+### 🔧 Passos para subir a aplicação:
 
-## Recomendações
+1. **Clone o projeto:**
+   ```bash
+   git clone https://github.com/DaviQuaresma/todo-list-davi
+   cd todo-list-davi
+   ```
 
-- Testes.
-- Mantenha o código limpo, simples.
-- Use bem os recursos da linguagem e as ferramentas.
-- Atente-se a expiração do token para que não sejam feitas requisições desnecessárias requisitando um novo token
-- Se interessar, faça a application integrado com o Google Tasks API https://developers.google.com/tasks/reference/rest
+2. **Suba os containers:**
+   ```bash
+   docker compose up --build -d
+   ```
+
+3. **Acesse os serviços:**
+   - **Frontend:** http://localhost:8080
+   - **Backend API:** http://localhost:8000/api
+   - **MySQL:** localhost:3308 (user: `davi`, pass: `davi`)
+
+4. **(Opcional)** Rodar comandos Laravel no container:
+   ```bash
+   docker exec -it todo-api sh
+   php artisan migrate --force
+   ```
+
+---
+
+## 🧭 Roteiro de Uso
+
+### 1. 📋 Registro
+
+Acesse `http://localhost:8080/register.html`  
+Preencha o formulário com nome, email e senha. Após isso vá a tela de login para acessar a página de tarefas.
+
+### 2. 🔐 Login
+
+Acesse `http://localhost:8080/index.html`  
+Informe email e senha registrados anteriormente. O token será salvo no `localStorage`.
+
+### 3. 🗂️ Gerenciar Listas
+
+- Clique no botão `+` para criar novas listas.
+- Clique sobre uma lista para exibir as tarefas dela.
+
+### 4. ✅ Gerenciar Tarefas
+
+- Digite e clique em `Adicionar` para criar nova tarefa na lista selecionada.
+- Clique no `✓` para marcar como concluída (ou desfazer).
+- Clique no `🗑️` para deletar a tarefa.
+
+### 5. 🚪 Logout
+
+- Clique em `Logout` no topo para sair e apagar o token local.
+
+---
+
+## 🛠️ Tecnologias
+
+- **Backend**: Laravel 10, JWT Auth (`tymon/jwt-auth`)
+- **Frontend**: HTML, Bootstrap 5, jQuery
+- **Banco de Dados**: MySQL 8
+- **Containers**: Docker, Docker Compose
+- **Servidor**: NGINX (Frontend)
+
+---
+
+## ⚙️ Comandos úteis (Docker)
+
+```bash
+# Subir containers
+docker compose up -d
+
+# Parar containers
+docker compose down
+
+# Entrar no container da API
+docker exec -it todo-api sh
+
+# Rodar migrations
+php artisan migrate --force
+
+# Ver logs da API
+docker logs -f todo-api
+```
+
+---
+
+## 💡 Observações
+
+- As requisições ao backend são autenticadas via token JWT salvo no `localStorage`.
+- O frontend e backend comunicam-se via CORS. As regras já estão configuradas.
+- O backend serve **apenas API JSON**.
+- O frontend é estático e servido via NGINX, com requests AJAX para a API Laravel.
+- **Atenção**: Algumas requisições podem apresentar lentidão na execução fora do Docker, especialmente quando o `php artisan serve` é usado diretamente. Isso ocorre por limitações do servidor embutido (voltado apenas para testes). Para desempenho ideal, utilize o ambiente com NGINX + PHP-FPM via Docker.
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT.
