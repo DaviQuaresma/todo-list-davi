@@ -10,8 +10,8 @@ class TaskController extends Controller
 {
     public function index($listId)
     {
-        $list = auth()->user()->todoLists()->findOrFail($listId);
-
+        $list = auth()->user()->todoLists()->with('tasks')->findOrFail($listId);
+        
         return response()->json($list->tasks);
     }
 
@@ -35,13 +35,12 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
 
-        // opcional: validar se a tarefa pertence ao usuário
         if ($task->todoList->user_id !== auth()->id()) {
             return response()->json(['error' => 'Acesso negado'], 403);
         }
 
         $task->update([
-            'is_done' => !$task->is_done // alterna o estado
+            'is_done' => !$task->is_done
         ]);
 
         return response()->json($task);

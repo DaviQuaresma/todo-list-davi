@@ -37,7 +37,7 @@ todo-list-davi/
 
 3. **Acesse os serviços:**
    - **Frontend:** http://localhost:8080
-   - **Backend API:** http://localhost:8000/api
+   - **Backend API:** /api
    - **MySQL:** localhost:3308 (user: `davi`, pass: `davi`)
 
 4. **(Opcional)** Rodar comandos Laravel no container:
